@@ -10,6 +10,9 @@ namespace AvailableResourcesCheck
         {
             ResourcesParser rp = new ResourcesParser("https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-Essentials&mclanguage=cs&mclimit=100");
             List<string> essentials = rp.Parse();
+            ResourcesProcessor proc = new ResourcesProcessor();
+
+            proc.ChangeSpecialChars(ref essentials);
             /**/
             for (int i = 0; i < essentials.Count; i++)
             {
