@@ -38,8 +38,13 @@ namespace AvailableResourcesCheck
             }
             /**/
             Console.WriteLine("=================================");
+
+            ResourcesLanguagesDetector rd = new ResourcesLanguagesDetector(essentials,languages);
+            List<ResourceWithLanguages> res = rd.DetectLanguages();
+            /*/
             // Creates an HttpWebRequest for the specified URL.
-            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create("https://www.4training.net/God%27s_Story/sa");
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create("https://www.4training.net/God%27s_Story/w");
+            myHttpWebRequest.Method = "GET";
             // Sends the HttpWebRequest and waits for a response.
             try
             {
@@ -49,7 +54,7 @@ namespace AvailableResourcesCheck
             {
                 Console.WriteLine("Nope");
             }
-                    
+            /**/        
             
         }
     }

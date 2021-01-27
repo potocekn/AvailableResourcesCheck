@@ -9,31 +9,39 @@ namespace AvailableResourcesCheck
     class ResourcesLanguagesDetector
     {
         List<string> resources;
+        List<string> languagesShortcuts;
 
-        public ResourcesLanguagesDetector(List<string> resources)
+        public ResourcesLanguagesDetector(List<string> resources, List<string> languagesShortcuts)
         {
             this.resources = resources;
+            this.languagesShortcuts = languagesShortcuts;
         }
 
-        ResourceWithLanguages DetectLanguagesForResource(string name)
+        ResourceWithLanguages DetectLanguagesForResource(string name, List<string> languageShortcuts)
         {
             ResourceWithLanguages resource = new ResourceWithLanguages(name);
             ResourcesProcessor processor = new ResourcesProcessor();
 
             string nameChangedspecials = processor.ChangeSpecialCharsInOneResource(name);
-            string url = "https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-"+nameChangedspecials+"&mclanguage=cs&mclimit=100";
+            string url = "https://www.4training.net/" + nameChangedspecials+"/";
 
-            HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(url);
-            
-            using (HttpWebResponse response = (HttpWebResponse)myRequest.GetResponse())
+            for (int i = 0; i < languageShortcuts.Count; i++)
             {
-                string responseText;
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                url += languageShortcuts[i];
+                HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                myHttpWebRequest.Method = "GET";
+                try
                 {
-                    responseText = reader.ReadToEnd();
+                    HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+                    resource.Languages.Add(languageShortcuts[i]);
+                    //Console.WriteLine("Yes: " + name + " ---- " + languageShortcuts[i]);
                 }
-                                
-            }
+                catch (Exception e)
+                {
+                    //Console.WriteLine("Nope: "+name+" ---- "+ languageShortcuts[i]);
+                }
+                url = "https://www.4training.net/" + nameChangedspecials + "/";
+            }           
 
             return resource;
         }
@@ -41,9 +49,14 @@ namespace AvailableResourcesCheck
         public List<ResourceWithLanguages> DetectLanguages()
         {
             List<ResourceWithLanguages> result = new List<ResourceWithLanguages>();
-            
-                        
-            return result;
+
+            foreach (var resource in resources)
+            {
+                ResourceWithLanguages resourceWithLanguages = DetectLanguagesForResource(resource,languagesShortcuts);
+                result.Add(resourceWithLanguages);
+            }
+
+                return result;
         }
     }
 }

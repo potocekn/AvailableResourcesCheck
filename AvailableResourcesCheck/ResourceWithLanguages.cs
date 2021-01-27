@@ -6,8 +6,8 @@ namespace AvailableResourcesCheck
 {
     class ResourceWithLanguages
     {
-        string Name { get; set; }
-        List<string> Languages { get; set; }
+        public string Name { get; set; }
+        public List<string> Languages { get; set; }
 
         public ResourceWithLanguages(string name)
         {
