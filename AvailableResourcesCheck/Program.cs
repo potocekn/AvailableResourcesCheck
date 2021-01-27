@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using DotNetWikiBot;
 
 namespace AvailableResourcesCheck
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
-            ResourcesParser rp = new ResourcesParser("https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-Essentials&mclanguage=cs&mclimit=100");
+            string ESSENTIALS_URL = "https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-Essentials&mclanguage=cs&mclimit=100";
+            ResourcesParser rp = new ResourcesParser(ESSENTIALS_URL);
             List<string> essentials = rp.Parse();
+            string MORE_URL = "https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-More&mclanguage=cs&mclimit=100";
+
+            ResourcesParser rp_more = new ResourcesParser(MORE_URL);
+            List<string> more = rp_more.Parse();
+
+            essentials.AddRange(more);
             ResourcesProcessor proc = new ResourcesProcessor();
 
             proc.ChangeSpecialChars(ref essentials);
@@ -28,7 +37,20 @@ namespace AvailableResourcesCheck
                 Console.WriteLine(languages[i]);
             }
             /**/
-            Console.WriteLine(languages.Count);
+            Console.WriteLine("=================================");
+            // Creates an HttpWebRequest for the specified URL.
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create("https://www.4training.net/God%27s_Story/sa");
+            // Sends the HttpWebRequest and waits for a response.
+            try
+            {
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Nope");
+            }
+                    
+            
         }
     }
 }

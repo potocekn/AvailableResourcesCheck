@@ -8,18 +8,29 @@ namespace AvailableResourcesCheck
     {
         public void ChangeSpecialChars(ref List<string> resourceNames)
         {
+            if (resourceNames == null) return;
+
             for (int i = 0; i < resourceNames.Count; i++)
             {
-                if (resourceNames[i].Contains('\''))
-                {
-                    resourceNames[i] = resourceNames[i].Replace("'","%27");
-                }
-
-                if (resourceNames[i].Contains(' '))
-                {
-                    resourceNames[i] = resourceNames[i].Replace(" ", "_");
-                }
+                resourceNames[i] = ChangeSpecialCharsInOneResource(resourceNames[i]);
             }
+        }
+
+        public string ChangeSpecialCharsInOneResource(string name)
+        {
+            string result;
+            if (name.Contains('\''))
+            {
+                name = name.Replace("'", "%27");
+            }
+
+            if (name.Contains(' '))
+            {
+                name = name.Replace(" ", "_");
+            }
+
+            result = name;
+            return result;
         }
 
     }

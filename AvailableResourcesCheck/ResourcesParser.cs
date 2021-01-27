@@ -54,12 +54,23 @@ namespace AvailableResourcesCheck
                     char j = responseText[i];
                     while (j != '|')
                     {
-                        resource.Append(j);
-                        i++;
-                        j = responseText[i];
+                        if (j == ']')
+                        {
+                            resource = new StringBuilder();
+                            startReading = false;
+                            wasSquareBracket = false;
+                            break;
+                        }
+                        else
+                        {
+                            resource.Append(j);
+                            i++;
+                            j = responseText[i];
+                        }
+                        
                     }
 
-                    result.Add(resource.ToString());
+                    if (resource.ToString() != (new StringBuilder()).ToString()) result.Add(resource.ToString());
                     resource = new StringBuilder();
                     startReading = false;
                     wasSquareBracket = false;
