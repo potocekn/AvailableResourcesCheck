@@ -21,6 +21,7 @@ namespace AvailableResourcesCheck
             essentials.AddRange(more);
             ResourcesProcessor proc = new ResourcesProcessor();
 
+            Console.WriteLine("Resources:");
             proc.ChangeSpecialChars(ref essentials);
             /**/
             for (int i = 0; i < essentials.Count; i++)
@@ -29,6 +30,7 @@ namespace AvailableResourcesCheck
             }
             /**/
             Console.WriteLine("=================================");
+            Console.WriteLine("Languages:");
             LanguagesParser lp = new LanguagesParser("https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-Languages&mclanguage=cs&mclimit=100");
             List<string> languages = lp.Parse();
             /**/
@@ -38,24 +40,17 @@ namespace AvailableResourcesCheck
             }
             /**/
             Console.WriteLine("=================================");
-
+            /**/
+            Console.WriteLine("Pages:");
             ResourcesLanguagesDetector rd = new ResourcesLanguagesDetector(essentials,languages);
             List<ResourceWithLanguages> res = rd.DetectLanguages();
-            /*/
-            // Creates an HttpWebRequest for the specified URL.
-            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create("https://www.4training.net/God%27s_Story/w");
-            myHttpWebRequest.Method = "GET";
-            // Sends the HttpWebRequest and waits for a response.
-            try
-            {
-                HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Nope");
-            }
-            /**/        
-            
+            Console.WriteLine("=================================");
+            /**/
+
+            FileChecker fch = new FileChecker(@"C:\Users\User\Desktop\json_test\");
+            proc.ChangeFileProblematicChars(ref res);
+            fch.SaveActualState(res);
+
         }
     }
 }

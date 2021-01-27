@@ -33,5 +33,13 @@ namespace AvailableResourcesCheck
             return result;
         }
 
+        public void ChangeFileProblematicChars(ref List<ResourceWithLanguages> resources)
+        {
+            for (int i = 0; i < resources.Count; i++)
+            {
+                resources[i].Name = resources[i].Name.Replace(":","_");
+            }
+        }
+
     }
 }

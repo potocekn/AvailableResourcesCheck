@@ -34,11 +34,11 @@ namespace AvailableResourcesCheck
                 {
                     HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
                     resource.Languages.Add(languageShortcuts[i]);
-                    //Console.WriteLine("Yes: " + name + " ---- " + languageShortcuts[i]);
+                    Console.WriteLine("Yes: " + name + " ---- " + languageShortcuts[i]);
                 }
                 catch (Exception e)
-                {
-                    //Console.WriteLine("Nope: "+name+" ---- "+ languageShortcuts[i]);
+                {                   
+                    Console.WriteLine("Nope: "+name+" ---- "+ languageShortcuts[i]);
                 }
                 url = "https://www.4training.net/" + nameChangedspecials + "/";
             }           
