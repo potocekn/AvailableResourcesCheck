@@ -11,7 +11,8 @@ namespace AvailableResourcesCheck
     /// </summary>
     class LanguagesParser: AbstractParser
     {        
-        public LanguagesParser(string url) {
+        public LanguagesParser(string url) 
+        {
             this.url = url;
         }
 
@@ -35,7 +36,7 @@ namespace AvailableResourcesCheck
                 Extract(ref result, responseText);
             }
 
-                return result;
+            return result;
         }
 
         /// <summary>

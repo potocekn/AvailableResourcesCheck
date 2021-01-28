@@ -11,7 +11,6 @@ namespace AvailableResourcesCheck
     {
         string Server { get; }
         string ApiJsonPage { get; }
-
         string ApiTranslationLimit{ get; }
 
         public ConfigInfo(string server, string apiJsonPage, string apiTranslationLimit)

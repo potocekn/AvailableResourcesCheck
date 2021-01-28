@@ -39,7 +39,6 @@ namespace AvailableResourcesCheck
             sb.Append("}}}");
 
             return sb.ToString();
-
         }
 
         /// <summary>

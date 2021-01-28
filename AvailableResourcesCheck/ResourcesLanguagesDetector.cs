@@ -71,7 +71,7 @@ namespace AvailableResourcesCheck
                 result.Add(resourceWithLanguages);
             }
 
-                return result;
+            return result;
         }
     }
 }

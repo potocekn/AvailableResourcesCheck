@@ -32,7 +32,6 @@ namespace AvailableResourcesCheck
 
             while (i < responseText.Length)
             {
-
                 if (responseText[i] == '[')
                 {
                     if (wasSquareBracket)
@@ -101,7 +100,6 @@ namespace AvailableResourcesCheck
             }
 
             return result;
-        }
-                
+        }               
     }
 }
