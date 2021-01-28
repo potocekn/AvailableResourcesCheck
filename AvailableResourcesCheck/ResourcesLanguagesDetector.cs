@@ -27,13 +27,13 @@ namespace AvailableResourcesCheck
         /// <param name="name">name of resource that is used in url</param>
         /// <param name="languageShortcuts">all available languages on 4training</param>
         /// <returns>Custom structure that contains name and languages of given resource</returns>
-        ResourceWithLanguages DetectLanguagesForResource(string name, List<string> languageShortcuts)
+        ResourceWithLanguages DetectLanguagesForResource(string name, List<string> languageShortcuts, string server)
         {
             ResourceWithLanguages resource = new ResourceWithLanguages(name);
             ResourcesProcessor processor = new ResourcesProcessor();
 
             string nameChangedspecials = processor.ChangeSpecialCharsInOneResource(name);
-            string url = "https://www.4training.net/" + nameChangedspecials+"/";
+            string url = server + nameChangedspecials+"/";
 
             for (int i = 0; i < languageShortcuts.Count; i++)
             {
@@ -50,7 +50,7 @@ namespace AvailableResourcesCheck
                 {                   
                     Console.WriteLine("Nope: "+name+" ---- "+ languageShortcuts[i]);
                 }
-                url = "https://www.4training.net/" + nameChangedspecials + "/";
+                url = server + nameChangedspecials + "/";
             }           
 
             return resource;
@@ -59,14 +59,15 @@ namespace AvailableResourcesCheck
         /// <summary>
         /// This method detects languages for all available resources on 4training.net
         /// </summary>
-        /// <returns>list of custom structures that contain name and languages of each resource</returns>
-        public List<ResourceWithLanguages> DetectLanguages()
+        /// <param name="server">server url</param>
+        /// <returns>list of custom structures that contain name and languages of each resource</returns>        
+        public List<ResourceWithLanguages> DetectLanguages(string server)
         {
             List<ResourceWithLanguages> result = new List<ResourceWithLanguages>();
 
             foreach (var resource in resources)
             {
-                ResourceWithLanguages resourceWithLanguages = DetectLanguagesForResource(resource,languagesShortcuts);
+                ResourceWithLanguages resourceWithLanguages = DetectLanguagesForResource(resource,languagesShortcuts,server);
                 result.Add(resourceWithLanguages);
             }
 
