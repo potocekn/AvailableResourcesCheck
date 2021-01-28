@@ -4,6 +4,9 @@ using System.Text;
 
 namespace AvailableResourcesCheck
 {
+    /// <summary>
+    /// This class is used like a wrapper for all information that we would like to remember for given resource such as name and available translations. 
+    /// </summary>
     class ResourceWithLanguages
     {
         public string Name { get; set; }

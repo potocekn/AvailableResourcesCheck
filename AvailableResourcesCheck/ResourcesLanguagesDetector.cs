@@ -6,6 +6,10 @@ using System.Text;
 
 namespace AvailableResourcesCheck
 {
+    /// <summary>
+    /// This class contains all necessary attributes and methods for detecting all translations that are available for each resuorce
+    /// on 4training.net
+    /// </summary>
     class ResourcesLanguagesDetector
     {
         List<string> resources;
@@ -17,6 +21,12 @@ namespace AvailableResourcesCheck
             this.languagesShortcuts = languagesShortcuts;
         }
 
+        /// <summary>
+        /// This method tests all possible combinations of "resource name + language" shortcut to determine if translation in given language exists.
+        /// </summary>
+        /// <param name="name">name of resource that is used in url</param>
+        /// <param name="languageShortcuts">all available languages on 4training</param>
+        /// <returns>Custom structure that contains name and languages of given resource</returns>
         ResourceWithLanguages DetectLanguagesForResource(string name, List<string> languageShortcuts)
         {
             ResourceWithLanguages resource = new ResourceWithLanguages(name);
@@ -46,6 +56,10 @@ namespace AvailableResourcesCheck
             return resource;
         }
 
+        /// <summary>
+        /// This method detects languages for all available resources on 4training.net
+        /// </summary>
+        /// <returns>list of custom structures that contain name and languages of each resource</returns>
         public List<ResourceWithLanguages> DetectLanguages()
         {
             List<ResourceWithLanguages> result = new List<ResourceWithLanguages>();
