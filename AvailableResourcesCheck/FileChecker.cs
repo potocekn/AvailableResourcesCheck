@@ -41,6 +41,29 @@ namespace AvailableResourcesCheck
             return sb.ToString();
         }
 
+        void SaveChanges(List<string> changes)
+        {
+            bool first = true;
+            string fileName = @"C:\Users\User\Desktop\rp_folders\changes\changes.txt";
+
+            foreach (var resource in changes)
+            {
+                Console.WriteLine("Save Changes: {0}", resource);
+                if (first)
+                {                    
+                    Console.WriteLine("Inside first ... resource: {0}", resource);
+                    File.WriteAllText(fileName, resource + '\n');
+                    
+
+                    first = false;                                   
+                }
+                else
+                {                   
+                    File.AppendAllText(fileName, resource + '\n');                    
+                }
+            }           
+        }
+
         /// <summary>
         /// This method is responsible for saving actual state of 4training resources and their translations.
         /// Checks local directory for json files containing previous checks information. 
@@ -50,6 +73,8 @@ namespace AvailableResourcesCheck
         /// <param name="resources"></param>
         public void SaveActualState(List<ResourceWithLanguages> resources)
         {
+            List<string> changes = new List<string>();
+
             foreach (var resource in resources)
             {
                 string fileName = directory + resource.Name + ".json";
@@ -59,8 +84,10 @@ namespace AvailableResourcesCheck
                     string text = System.IO.File.ReadAllText(fileName);
                     foreach (var language in resource.Languages)
                     {
-                        if (!text.Contains("\"Language\":\"" + language + "\""))
+                        if (!text.Contains("\"" + language + "\""))
                         {
+                            Console.WriteLine("Changed file {0}", fileName);
+                            changes.Add(resource.Name);
                             File.WriteAllText(fileName, CreateJsonText(resource));
                             break;
                         }
@@ -73,11 +100,13 @@ namespace AvailableResourcesCheck
                     
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                     {
+                        changes.Add(resource.Name);
                         file.Write(CreateJsonText(resource));
                     }
                 }
-
             }
+
+            SaveChanges(changes);
         }
     }
 }

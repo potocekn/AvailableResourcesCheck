@@ -13,8 +13,9 @@ namespace AvailableResourcesCheck
             ConfigInfoParser cip = new ConfigInfoParser(@"C:\Users\User\Desktop\rp_folders\config\config_info.txt");
             ConfigInfo ci = cip.GetConfigInfo();
             Console.WriteLine("=================================");
-            Console.ReadLine();
+            //Console.ReadLine();
             string ESSENTIALS_URL = ci.GetApiCallUrl("Essentials");
+            Console.WriteLine(ESSENTIALS_URL);
             ResourcesParser rp = new ResourcesParser(ESSENTIALS_URL);
             List<string> essentials = rp.Parse();
             string MORE_URL = ci.GetApiCallUrl("More");
