@@ -41,6 +41,11 @@ namespace AvailableResourcesCheck
             return sb.ToString();
         }
 
+        /// <summary>
+        /// This method is used to save changed resources to separate file with given file name.
+        /// </summary>
+        /// <param name="changes">List of changed resource names</param>
+        /// <param name="fileName">file where to save the changes</param>
         void SaveChanges(List<string> changes, string fileName)
         {
             bool first = true;

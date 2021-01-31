@@ -19,12 +19,10 @@ namespace AvailableResourcesCheck
         public ConfigInfo GetConfigInfo()
         {
             string[] lines = System.IO.File.ReadAllLines(path);
-            string server = lines[0].Split("==")[1].Trim();
-            string apiJsonPage = lines[1].Split("==")[1].Trim();
-            string apiTranslationLimit = lines[2].Split("==")[1].Trim();
-            Console.WriteLine("Server:"+server);
-            Console.WriteLine("JsonPage:"+apiJsonPage);
-            Console.WriteLine("Translation:" + apiTranslationLimit);
+            string server = lines[0].Split("==")[1].Trim(); //first line in the file config_info.txt
+            string apiJsonPage = lines[1].Split("==")[1].Trim(); //second line in the file config_info.txt
+            string apiTranslationLimit = lines[2].Split("==")[1].Trim(); //third line in the file config_info.txt
+            
             ConfigInfo result = new ConfigInfo(server,apiJsonPage,apiTranslationLimit);
             return result;
         }
