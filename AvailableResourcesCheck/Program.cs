@@ -10,10 +10,14 @@ namespace AvailableResourcesCheck
         
         static void Main(string[] args)
         {
-            ConfigInfoParser cip = new ConfigInfoParser(@"C:\Users\User\Desktop\rp_folders\config\config_info.txt");
+            string configInfoString = @"C:\Users\User\Desktop\rp_folders\config\config_info.txt";
+            string whereToPutJsons = @"C:\Users\User\Desktop\rp_folders\json_test\";
+            string whereToPutChanges = @"C:\Users\User\Desktop\rp_folders\changes\changes.txt";
+
+            ConfigInfoParser cip = new ConfigInfoParser(configInfoString);
             ConfigInfo ci = cip.GetConfigInfo();
             Console.WriteLine("=================================");
-            //Console.ReadLine();
+            
             string ESSENTIALS_URL = ci.GetApiCallUrl("Essentials");
             Console.WriteLine(ESSENTIALS_URL);
             ResourcesParser rp = new ResourcesParser(ESSENTIALS_URL);
@@ -52,9 +56,9 @@ namespace AvailableResourcesCheck
             Console.WriteLine("=================================");
             /**/
 
-            FileChecker fch = new FileChecker(@"C:\Users\User\Desktop\rp_folders\json_test\");
+            FileChecker fch = new FileChecker(whereToPutJsons);
             proc.ChangeFileProblematicChars(ref res);
-            fch.SaveActualState(res);
+            fch.SaveActualState(res, whereToPutChanges);
 
         }
     }

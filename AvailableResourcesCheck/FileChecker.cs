@@ -41,11 +41,10 @@ namespace AvailableResourcesCheck
             return sb.ToString();
         }
 
-        void SaveChanges(List<string> changes)
+        void SaveChanges(List<string> changes, string fileName)
         {
             bool first = true;
-            string fileName = @"C:\Users\User\Desktop\rp_folders\changes\changes.txt";
-
+            
             foreach (var resource in changes)
             {
                 Console.WriteLine("Save Changes: {0}", resource);
@@ -71,7 +70,7 @@ namespace AvailableResourcesCheck
         /// For existing files content is changed only in case that something changed on 4training server (new translation, ...)
         /// </summary>
         /// <param name="resources"></param>
-        public void SaveActualState(List<ResourceWithLanguages> resources)
+        public void SaveActualState(List<ResourceWithLanguages> resources, string whereToSaveChanges)
         {
             List<string> changes = new List<string>();
 
@@ -106,7 +105,7 @@ namespace AvailableResourcesCheck
                 }
             }
 
-            SaveChanges(changes);
+            SaveChanges(changes, whereToSaveChanges);
         }
     }
 }
