@@ -10,9 +10,9 @@ namespace AvailableResourcesCheck
         
         static void Main(string[] args)
         {
-            string configInfoString = @"C:\Users\User\Desktop\rp_folders\config\config_info.txt";
-            string whereToPutJsons = @"C:\Users\User\Desktop\rp_folders\json_test\";
-            string whereToPutChanges = @"C:\Users\User\Desktop\rp_folders\changes\changes.txt";
+            string configInfoString = args[0];//@"C:\Users\User\Desktop\rp_folders\config\config_info.txt";
+            string whereToPutJsons = args[1]; // @"C:\Users\User\Desktop\rp_folders\json_test\";
+            string whereToPutChanges = args[2]; // @"C:\Users\User\Desktop\rp_folders\changes\changes.txt";
 
             ConfigInfoParser cip = new ConfigInfoParser(configInfoString);
             ConfigInfo ci = cip.GetConfigInfo();
@@ -22,8 +22,7 @@ namespace AvailableResourcesCheck
             Console.WriteLine(ESSENTIALS_URL);
             ResourcesParser rp = new ResourcesParser(ESSENTIALS_URL);
             List<string> essentials = rp.Parse();
-            string MORE_URL = ci.GetApiCallUrl("More");
-
+            string MORE_URL = ci.GetApiCallUrl("More");            
             ResourcesParser rp_more = new ResourcesParser(MORE_URL);
             List<string> more = rp_more.Parse();
 
@@ -52,7 +51,7 @@ namespace AvailableResourcesCheck
             /**/
             Console.WriteLine("Pages:");
             ResourcesLanguagesDetector rd = new ResourcesLanguagesDetector(essentials,languages);
-            List<ResourceWithLanguages> res = rd.DetectLanguages(ci.GetServer());
+            List<ResourceWithLanguages> res = rd.DetectLanguages(ci.Server);
             Console.WriteLine("=================================");
             /**/
 

@@ -5,6 +5,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="DotNetWikiBot.Build.for.Mono">
       <HintPath>..\..\..\..\Downloads\DotNetWikiBot_3.15\DotNetWikiBot.Build.for.Mono.dll</HintPath>

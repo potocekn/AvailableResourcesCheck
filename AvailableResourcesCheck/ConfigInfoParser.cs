@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace AvailableResourcesCheck
@@ -17,13 +18,39 @@ namespace AvailableResourcesCheck
         }
 
         public ConfigInfo GetConfigInfo()
-        {
-            string[] lines = System.IO.File.ReadAllLines(path);
-            string server = lines[0].Split("==")[1].Trim(); //first line in the file config_info.txt
-            string apiJsonPage = lines[1].Split("==")[1].Trim(); //second line in the file config_info.txt
-            string apiTranslationLimit = lines[2].Split("==")[1].Trim(); //third line in the file config_info.txt
-            
-            ConfigInfo result = new ConfigInfo(server,apiJsonPage,apiTranslationLimit);
+        {   
+            ConfigInfo result = new ConfigInfo();
+            using (StreamReader file = new StreamReader(path))
+            {
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (!line.Contains("\": \""))
+                    {
+                        continue;
+                    }
+
+                    string beginningBefore = line.Split(": ")[0].Trim();
+                    string beginning = beginningBefore.Substring(1, beginningBefore.Length - 2);
+                    string paramBefore = line.Split(": ")[1].Trim();
+                    string param = paramBefore.Substring(1, paramBefore.Length - 3);
+
+                    switch (beginning)
+                    {
+                        case "ServerDomain":
+                            result.Server = param;
+                            break;
+                        case "ApiJsonPage":
+                            result.ApiJsonPage = param;
+                            break;
+                        case "ApiTranslationLimit":
+                            result.ApiTranslationLimit = param;
+                            break;                        
+                        default:
+                            throw new InvalidParameterInConfigTxtFile(beginning);
+                    }
+                }
+            }            
             return result;
         }
     }

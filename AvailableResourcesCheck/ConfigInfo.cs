@@ -9,10 +9,11 @@ namespace AvailableResourcesCheck
     /// </summary>
     class ConfigInfo
     {
-        string Server { get; }
-        string ApiJsonPage { get; }
-        string ApiTranslationLimit{ get; }
+        public string Server { get; set; }
+        public string ApiJsonPage { get; set; }
+        public string ApiTranslationLimit { get; set; }
 
+        public ConfigInfo() { }
         public ConfigInfo(string server, string apiJsonPage, string apiTranslationLimit)
         {
             this.Server = server;
@@ -28,11 +29,6 @@ namespace AvailableResourcesCheck
         public string GetApiCallUrl(string pageName)
         {
             return Server + ApiJsonPage + pageName + ApiTranslationLimit;
-        }
-
-        public string GetServer() 
-        {
-            return Server;
-        }
+        }    
     }
 }

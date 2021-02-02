@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AvailableResourcesCheck": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\User\\Desktop\\rp_folders\\config\\config_info.txt C:\\Users\\User\\Desktop\\rp_folders\\json_test\\ C:\\Users\\User\\Desktop\\rp_folders\\changes\\changes.txt"
+    }
+  }
+}
