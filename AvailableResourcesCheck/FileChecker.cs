@@ -54,11 +54,8 @@ namespace AvailableResourcesCheck
             {
                 Console.WriteLine("Save Changes: {0}", resource);
                 if (first)
-                {                    
-                    Console.WriteLine("Inside first ... resource: {0}", resource);
-                    File.WriteAllText(fileName, resource + '\n');
-                    
-
+                {       
+                    File.WriteAllText(fileName, resource + '\n');             
                     first = false;                                   
                 }
                 else

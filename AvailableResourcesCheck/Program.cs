@@ -22,13 +22,15 @@ namespace AvailableResourcesCheck
             Console.WriteLine(ESSENTIALS_URL);
             ResourcesParser rp = new ResourcesParser(ESSENTIALS_URL);
             List<string> essentials = rp.Parse();
+
             string MORE_URL = ci.GetApiCallUrl("More");            
             ResourcesParser rp_more = new ResourcesParser(MORE_URL);
             List<string> more = rp_more.Parse();
-
             essentials.AddRange(more);
-            ResourcesProcessor proc = new ResourcesProcessor();
 
+            Saver.SaveResources(ci.DetectedResourcesFileLocation, essentials);
+
+            ResourcesProcessor proc = new ResourcesProcessor();
             Console.WriteLine("Resources:");
             proc.ChangeSpecialChars(ref essentials);
             /**/
@@ -41,6 +43,7 @@ namespace AvailableResourcesCheck
             Console.WriteLine("Languages:");
             LanguagesParser lp = new LanguagesParser(ci.GetApiCallUrl("Languages"));
             List<string> languages = lp.Parse();
+            Saver.SaveLanguages(ci.DetectedLanguagesFileLocation,languages);
             /**/
             for (int i = 0; i < languages.Count; i++)
             {

@@ -45,7 +45,13 @@ namespace AvailableResourcesCheck
                             break;
                         case "ApiTranslationLimit":
                             result.ApiTranslationLimit = param;
-                            break;                        
+                            break;
+                        case "DetectedLanguagesFileLocation":
+                            result.DetectedLanguagesFileLocation = param;
+                            break;
+                        case "DetectedResourcesFileLocation":
+                            result.DetectedResourcesFileLocation = param;
+                            break;
                         default:
                             throw new InvalidParameterInConfigTxtFile(beginning);
                     }

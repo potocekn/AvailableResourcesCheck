@@ -12,15 +12,11 @@ namespace AvailableResourcesCheck
         public string Server { get; set; }
         public string ApiJsonPage { get; set; }
         public string ApiTranslationLimit { get; set; }
+        public string DetectedLanguagesFileLocation { get; set; }
+        public string DetectedResourcesFileLocation { get; set; }
 
         public ConfigInfo() { }
-        public ConfigInfo(string server, string apiJsonPage, string apiTranslationLimit)
-        {
-            this.Server = server;
-            this.ApiJsonPage = apiJsonPage;
-            this.ApiTranslationLimit = apiTranslationLimit;
-        }
-
+     
         /// <summary>
         /// This method returns url for api call that requests json response from given page on 4training server
         /// </summary>
