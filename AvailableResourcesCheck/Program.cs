@@ -55,12 +55,13 @@ namespace AvailableResourcesCheck
             Console.WriteLine("Pages:");
             ResourcesLanguagesDetector rd = new ResourcesLanguagesDetector(essentials,languages);
             List<ResourceWithLanguages> res = rd.DetectLanguages(ci.Server);
+            List<LanguageWithResources> lwr = rd.DetectResourcesForLanguages(res,languages);
             Console.WriteLine("=================================");
             /**/
 
             FileChecker fch = new FileChecker(whereToPutJsons);
             proc.ChangeFileProblematicChars(ref res);
-            fch.SaveActualState(res, whereToPutChanges);
+            fch.SaveActualState(lwr, whereToPutChanges);
 
         }
     }

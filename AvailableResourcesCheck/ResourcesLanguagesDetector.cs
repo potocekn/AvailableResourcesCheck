@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -70,6 +71,25 @@ namespace AvailableResourcesCheck
                 ResourceWithLanguages resourceWithLanguages = DetectLanguagesForResource(resource,languagesShortcuts,server);
                 result.Add(resourceWithLanguages);
             }
+
+            return result;
+        }
+
+        public List<LanguageWithResources> DetectResourcesForLanguages(List<ResourceWithLanguages> resources, List<string> languages)
+        {
+            List<LanguageWithResources> result = new List<LanguageWithResources>();
+            foreach (var languageShortcut in languages)
+            {
+                LanguageWithResources lwr = new LanguageWithResources(new CultureInfo(languageShortcut).DisplayName);
+                foreach (var resource in resources)
+                {
+                    if (resource.Languages.Contains(languageShortcut))
+                    {
+                        lwr.Resources.Add(resource.Name);
+                    }
+                }
+                result.Add(lwr);
+            }           
 
             return result;
         }

@@ -56,6 +56,7 @@ namespace AvailableResourcesCheck
             for (int i = 0; i < resources.Count; i++)
             {
                 resources[i].Name = resources[i].Name.Replace(":","_");
+                resources[i].Name = resources[i].Name.Replace(" ", "_");
             }
         }
     }

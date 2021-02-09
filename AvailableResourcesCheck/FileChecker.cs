@@ -22,21 +22,16 @@ namespace AvailableResourcesCheck
         /// This method creates custom json string, that represents content of local json file describing actual state of the resource
         /// and its translations.
         /// </summary>
-        /// <param name="resource">Resource we would like to transform to json</param>
+        /// <param name="languageWithResource">Resource we would like to transform to json</param>
         /// <returns>json file content for given resource in a form of string</returns>
-        string CreateJsonText(ResourceWithLanguages resource)
+        string CreateText(LanguageWithResources languageWithResource)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("{ \"Resource\": { \"Name\": { \"FileName\":\"");
-            sb.Append(resource.Name);
-            sb.Append("\",} \"Language\": {");
-           
-            foreach (var language in resource.Languages)
+                       
+            foreach (var resource in languageWithResource.Resources)
             {
-               sb.Append("\"LanguageName\":\"" + language + "\",");
+               sb.Append(resource + "\n");
             }
-
-            sb.Append("}}}");
 
             return sb.ToString();
         }
@@ -71,25 +66,25 @@ namespace AvailableResourcesCheck
         /// If these files do not exist, this method creates them and fills them with actual information.
         /// For existing files content is changed only in case that something changed on 4training server (new translation, ...)
         /// </summary>
-        /// <param name="resources"></param>
-        public void SaveActualState(List<ResourceWithLanguages> resources, string whereToSaveChanges)
+        /// <param name="languagesWithResources"></param>
+        public void SaveActualState(List<LanguageWithResources> languagesWithResources, string whereToSaveChanges)
         {
             List<string> changes = new List<string>();
 
-            foreach (var resource in resources)
+            foreach (var languageWithResources in languagesWithResources)
             {
-                string fileName = directory + resource.Name + ".json";
+                string fileName = directory + languageWithResources.Name + ".txt";
                 if (File.Exists(fileName))
                 {
-                    Console.WriteLine("File {0}{1} exists", resource.Name, ".json");
+                    Console.WriteLine("File {0}{1} exists", languageWithResources.Name, ".txt");
                     string text = System.IO.File.ReadAllText(fileName);
-                    foreach (var language in resource.Languages)
+                    foreach (var resource in languageWithResources.Resources)
                     {
-                        if (!text.Contains("\"" + language + "\""))
+                        if (!text.Contains(resource))
                         {
                             Console.WriteLine("Changed file {0}", fileName);
-                            changes.Add(resource.Name);
-                            File.WriteAllText(fileName, CreateJsonText(resource));
+                            changes.Add(languageWithResources.Name);
+                            File.WriteAllText(fileName, CreateText(languageWithResources));
                             break;
                         }
                     }
@@ -101,8 +96,8 @@ namespace AvailableResourcesCheck
                     
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                     {
-                        changes.Add(resource.Name);
-                        file.Write(CreateJsonText(resource));
+                        changes.Add(languageWithResources.Name);
+                        file.Write(CreateText(languageWithResources));
                     }
                 }
             }
