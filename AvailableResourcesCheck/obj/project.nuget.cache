@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "GpZfC0kcSQjJmEoyVC8g4sc3c8VX8LoJszESzCQ5s9PjLxD3WsssLlQ7uS7QBtnzpmoZR4V/eSB8x7QzNZoU6w==",
+  "dgSpecHash": "wES3B3y6D3zj5CZhGnvdq1EAi0r5A1d07hHYcDQqSg9Tqhyo6QNH8nK566+GL2hXlRxzhCFmH8Yp3/3uUzO99w==",
   "success": true,
   "projectFilePath": "C:\\Users\\User\\source\\repos\\AvailableResourcesCheck\\AvailableResourcesCheck\\AvailableResourcesCheck.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

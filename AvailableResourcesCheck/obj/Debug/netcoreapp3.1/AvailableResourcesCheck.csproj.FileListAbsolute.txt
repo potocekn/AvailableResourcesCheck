@@ -23,3 +23,4 @@ C:\Users\User\source\repos\AvailableResourcesCheck\AvailableResourcesCheck\obj\D
 C:\Users\User\source\repos\AvailableResourcesCheck\AvailableResourcesCheck\obj\Debug\netcoreapp3.1\AvailableResourcesCheck.dll
 C:\Users\User\source\repos\AvailableResourcesCheck\AvailableResourcesCheck\obj\Debug\netcoreapp3.1\AvailableResourcesCheck.pdb
 C:\Users\User\source\repos\AvailableResourcesCheck\AvailableResourcesCheck\obj\Debug\netcoreapp3.1\AvailableResourcesCheck.genruntimeconfig.cache
+C:\Users\User\source\repos\AvailableResourcesCheck\AvailableResourcesCheck\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll

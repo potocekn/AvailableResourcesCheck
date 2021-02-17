@@ -15,10 +15,5 @@ namespace AvailableResourcesCheck
             this.Resources = new List<string>();
         }
 
-        public LanguageWithResources(string name, List<string> languages)
-        {
-            this.Name = name;
-            this.Resources = languages;
-        }
     }
 }

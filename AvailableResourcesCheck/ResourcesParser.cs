@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using DotNetWikiBot;
+using Newtonsoft.Json;
 
 namespace AvailableResourcesCheck
 {
@@ -17,6 +18,19 @@ namespace AvailableResourcesCheck
             this.url = url;
         }
 
+
+        /*
+         *  internal override void Extract(ref List<string> result, string responseText)
+            {
+                ResourcesResponse deserializedResponse = JsonConvert.DeserializeObject<ResourcesResponse>(responseText);
+
+                foreach (var messagecollection in deserializedResponse.query.messagecollection)
+                {                
+                    result.Add(messagecollection.title);
+                }
+            }
+         */
+
         /// <summary>
         /// This method takes web request response string and extracts resource names that are available at the moment on the 4training.net 
         /// Extracted resources are added into given list of strings named result.
@@ -25,57 +39,61 @@ namespace AvailableResourcesCheck
         /// <param name="responseText">response of web request in string form</param>
         internal override void Extract(ref List<string> result, string responseText)
         {
-            bool wasSquareBracket = false;
-            bool startReading = false;
-            StringBuilder resource = new StringBuilder();
-            int i = 0;
 
-            while (i < responseText.Length)
+            ResourcesResponse deserializedResponse = JsonConvert.DeserializeObject<ResourcesResponse>(responseText);
+
+            foreach (var messagecollection in deserializedResponse.Query.Messagecollection)
             {
-                if (responseText[i] == '[')
-                {
-                    if (wasSquareBracket)
-                    {
-                        startReading = true;
-                        i++;
-                        continue;
-                    }
-                    else
-                    {
-                        wasSquareBracket = true;
-                        i++;
-                        continue;
-                    }
-                }
+                bool wasSquareBracket = false;
+                bool startReading = false;
+                StringBuilder resource = new StringBuilder();
+                int i = 0;
 
-                if (startReading)
+                while (i < messagecollection.Definition.Length)
                 {
-                    char j = responseText[i];
-                    while (j != '|')
+                    if (messagecollection.Definition[i] == '[')
                     {
-                        if (j == ']')
+                        if (wasSquareBracket)
                         {
-                            resource = new StringBuilder();
-                            startReading = false;
-                            wasSquareBracket = false;
-                            break;
+                            startReading = true;
+                            i++;
+                            continue;
                         }
                         else
                         {
-                            resource.Append(j);
+                            wasSquareBracket = true;
                             i++;
-                            j = responseText[i];
+                            continue;
                         }
-                        
                     }
 
-                    if (resource.ToString() != (new StringBuilder()).ToString()) result.Add(resource.ToString());
-                    resource = new StringBuilder();
-                    startReading = false;
-                    wasSquareBracket = false;
+                    if (startReading)
+                    {
+                        char j = messagecollection.Definition[i];
+                        while (j != '|')
+                        {
+                            if (j == ']')
+                            {
+                                resource = new StringBuilder();
+                                startReading = false;
+                                wasSquareBracket = false;
+                                break;
+                            }
+                            else
+                            {
+                                resource.Append(j);
+                                i++;
+                                j = messagecollection.Definition[i];
+                            }
+
+                        }
+
+                        if ((resource.ToString() != (new StringBuilder()).ToString())) result.Add(resource.ToString());                        
+                        break;
+                    }
+                    i++;
                 }
-                i++;
-            }
+            }   
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,28 +33,30 @@ namespace AvailableResourcesCheck
         {
             ResourceWithLanguages resource = new ResourceWithLanguages(name);
             ResourcesProcessor processor = new ResourcesProcessor();
+            string MEDIAWIKI_REQUEST_LANGUAGES_FOR_RESOURCE = "mediawiki/api.php?action=query&format=json&meta=messagegroupstats&mgsgroup=page-";
 
             string nameChangedspecials = processor.ChangeSpecialCharsInOneResource(name);
-            string url = server + nameChangedspecials+"/";
+            string url = server + MEDIAWIKI_REQUEST_LANGUAGES_FOR_RESOURCE + nameChangedspecials;
 
-            for (int i = 0; i < languageShortcuts.Count; i++)
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            myHttpWebRequest.Method = "GET";
+                        
+            using (HttpWebResponse response = (HttpWebResponse)myHttpWebRequest.GetResponse())
             {
-                url += languageShortcuts[i];
-                HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                myHttpWebRequest.Method = "GET";
-                try
+                string responseText;
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
-                    HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
-                    resource.Languages.Add(languageShortcuts[i]);
-                    Console.WriteLine("Yes: " + name + " ---- " + languageShortcuts[i]);
+                    responseText = reader.ReadToEnd();
                 }
-                catch (Exception e)
-                {                   
-                    Console.WriteLine("Nope: "+name+" ---- "+ languageShortcuts[i]);
+                ResourceLanguagesResponse deserializedResponse = JsonConvert.DeserializeObject<ResourceLanguagesResponse>(responseText);
+                foreach (var messageGroupStats in deserializedResponse.Query.Messagegroupstats)
+                {
+                    if (messageGroupStats.Translated > 0)
+                    {
+                        resource.Languages.Add(messageGroupStats.Language);
+                    }
                 }
-                url = server + nameChangedspecials + "/";
-            }           
-
+            }
             return resource;
         }
 

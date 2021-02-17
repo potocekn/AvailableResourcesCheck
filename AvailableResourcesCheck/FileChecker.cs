@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -47,7 +48,7 @@ namespace AvailableResourcesCheck
             
             foreach (var resource in changes)
             {
-                Console.WriteLine("Save Changes: {0}", resource);
+                Debug.WriteLine("Save Changes: {0}", resource);
                 if (first)
                 {       
                     File.WriteAllText(fileName, resource + '\n');             
@@ -76,13 +77,13 @@ namespace AvailableResourcesCheck
                 string fileName = directory + languageWithResources.Name + ".txt";
                 if (File.Exists(fileName))
                 {
-                    Console.WriteLine("File {0}{1} exists", languageWithResources.Name, ".txt");
+                    Debug.WriteLine("File {0}{1} exists", languageWithResources.Name, ".txt");
                     string text = System.IO.File.ReadAllText(fileName);
                     foreach (var resource in languageWithResources.Resources)
                     {
                         if (!text.Contains(resource))
                         {
-                            Console.WriteLine("Changed file {0}", fileName);
+                            Debug.WriteLine("Changed file {0}", fileName);
                             changes.Add(languageWithResources.Name);
                             File.WriteAllText(fileName, CreateText(languageWithResources));
                             break;
