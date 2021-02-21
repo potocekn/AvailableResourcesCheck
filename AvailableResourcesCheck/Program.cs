@@ -13,9 +13,9 @@ namespace AvailableResourcesCheck
         
         static void Main(string[] args)
         {           
-            string configInfoString = args[0];//@"C:\Users\User\Desktop\rp_folders\config\config_info.txt";
-            string whereToPutJsons = args[1]; // @"C:\Users\User\Desktop\rp_folders\json_test\";
-            string whereToPutChanges = args[2]; // @"C:\Users\User\Desktop\rp_folders\changes\changes.txt";
+            string configInfoString = args[0];
+            string whereToPutJsons = args[1]; 
+            string whereToPutChanges = args[2]; 
 
             ConfigInfoParser cip = new ConfigInfoParser(configInfoString);
             ConfigInfo ci = cip.GetConfigInfo();
