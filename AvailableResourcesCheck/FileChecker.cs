@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -44,21 +45,12 @@ namespace AvailableResourcesCheck
         /// <param name="fileName">file where to save the changes</param>
         void SaveChanges(List<string> changes, string fileName)
         {
-            bool first = true;
-            
-            foreach (var resource in changes)
+            if (!File.Exists(fileName))
             {
-                Debug.WriteLine("Save Changes: {0}", resource);
-                if (first)
-                {       
-                    File.WriteAllText(fileName, resource + '\n');             
-                    first = false;                                   
-                }
-                else
-                {                   
-                    File.AppendAllText(fileName, resource + '\n');                    
-                }
-            }           
+                var myFile = File.Create(fileName);
+                myFile.Close();
+            }
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(changes));    
         }
 
         /// <summary>
@@ -74,21 +66,19 @@ namespace AvailableResourcesCheck
 
             foreach (var languageWithResources in languagesWithResources)
             {
-                string fileName = directory + languageWithResources.Name + ".txt";
+                string fileName = directory + languageWithResources.Name + ".json";
                 if (File.Exists(fileName))
                 {
-                    Debug.WriteLine("File {0}{1} exists", languageWithResources.Name, ".txt");
-                    string text = System.IO.File.ReadAllText(fileName);
-                    foreach (var resource in languageWithResources.Resources)
+                    LanguageWithResources lwr = JsonConvert.DeserializeObject<LanguageWithResources>(File.ReadAllText(fileName).Trim());
+                    foreach (var item in languageWithResources.Resources)
                     {
-                        if (!text.Contains(resource))
+                        if (!lwr.Resources.Contains(item))
                         {
-                            Debug.WriteLine("Changed file {0}", fileName);
-                            changes.Add(languageWithResources.Name);
-                            File.WriteAllText(fileName, CreateText(languageWithResources));
-                            break;
+                            changes.Add(item);
                         }
                     }
+                    File.WriteAllText(fileName, JsonConvert.SerializeObject(languageWithResources));
+                    Debug.WriteLine("File {0}{1} exists", languageWithResources.Name, ".json");                    
                 }
                 else
                 {
@@ -98,12 +88,12 @@ namespace AvailableResourcesCheck
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                     {
                         changes.Add(languageWithResources.Name);
-                        file.Write(CreateText(languageWithResources));
+                        file.Write(JsonConvert.SerializeObject(languageWithResources));
                     }
                 }
             }
 
-            SaveChanges(changes, whereToSaveChanges);
+            SaveChanges(changes, whereToSaveChanges + "changes.json");
         }
     }
 }

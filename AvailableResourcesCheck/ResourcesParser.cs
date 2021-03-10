@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using DotNetWikiBot;
 using Newtonsoft.Json;
 
 namespace AvailableResourcesCheck

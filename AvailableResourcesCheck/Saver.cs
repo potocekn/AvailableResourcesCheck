@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,39 +11,33 @@ namespace AvailableResourcesCheck
     {
         public static void SaveLanguages(string path, List<string> languageShortcuts)
         {
-            string fileName = path + "languages.txt";
+            string fileName = path + "languages.json";
             
             if (File.Exists(fileName))
             {
                 var myFile = File.Create(fileName);
                 myFile.Close();
             }
-          
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
+
+            List<string> languages = new List<string>();
+
+            foreach (var shortcut in languageShortcuts)
             {
-                foreach (var shortcut in languageShortcuts)
-                {
-                    file.WriteLine(new CultureInfo(shortcut).DisplayName);
-                }
+                languages.Add(new CultureInfo(shortcut).DisplayName);
             }
+
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(languages));
         }
 
         public static void SaveResources(string path, List<string> resources)
         {
-            string fileName = path + "resources.txt";
+            string fileName = path + "resources.json";
             if (!File.Exists(fileName))
             {
                 var myFile = File.Create(fileName);
                 myFile.Close();                                
-            }            
-
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
-            {
-                foreach (var resource in resources)
-                {
-                    file.WriteLine(resource);
-                }
-            }  
+            }
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(resources));
         }
     }
 }
