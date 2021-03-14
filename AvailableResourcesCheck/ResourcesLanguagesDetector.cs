@@ -51,7 +51,7 @@ namespace AvailableResourcesCheck
                 ResourceLanguagesResponse deserializedResponse = JsonConvert.DeserializeObject<ResourceLanguagesResponse>(responseText);
                 foreach (var messageGroupStats in deserializedResponse.Query.Messagegroupstats)
                 {
-                    if (messageGroupStats.Translated > 0)
+                    if (messageGroupStats.Translated > 0 && (messageGroupStats.Translated + messageGroupStats.Fuzzy) == messageGroupStats.Total)
                     {
                         resource.Languages.Add(messageGroupStats.Language);
                     }
@@ -83,12 +83,14 @@ namespace AvailableResourcesCheck
             List<LanguageWithResources> result = new List<LanguageWithResources>();
             foreach (var languageShortcut in languages)
             {
+                Console.WriteLine("--------------------------------------" + languageShortcut);
                 LanguageWithResources lwr = new LanguageWithResources(new CultureInfo(languageShortcut).DisplayName);
                 foreach (var resource in resources)
                 {
                     if (resource.Languages.Contains(languageShortcut))
                     {
                         lwr.Resources.Add(resource.Name);
+                        Console.WriteLine(resource.Name);
                     }
                 }
                 result.Add(lwr);

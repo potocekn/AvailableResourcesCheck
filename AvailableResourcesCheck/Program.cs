@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
+using AvailableResourcesCheck.ResourceLinksHelpers;
 
 namespace AvailableResourcesCheck
 {
@@ -34,7 +36,6 @@ namespace AvailableResourcesCheck
 
             ResourcesProcessor proc = new ResourcesProcessor();
             Debug.WriteLine("Resources:");
-            proc.ChangeSpecialChars(ref essentials);
             
             for (int i = 0; i < essentials.Count; i++)
             {
@@ -46,18 +47,21 @@ namespace AvailableResourcesCheck
             LanguagesParser lp = new LanguagesParser(ci.GetApiCallUrl("Languages"));
             List<string> languages = lp.Parse();
             Saver.SaveLanguages(ci.DetectedLanguagesFileLocation,languages);
-            
+
+            List<string> languagesFullNames = new List<string>();
             for (int i = 0; i < languages.Count; i++)
             {
                 Debug.WriteLine(languages[i]);
+                languagesFullNames.Add((new CultureInfo(languages[i])).DisplayName);
             }     
            
             ResourcesLanguagesDetector rd = new ResourcesLanguagesDetector(essentials,languages);
             List<ResourceWithLanguages> res = rd.DetectLanguages(ci.Server);
             List<LanguageWithResources> lwr = rd.DetectResourcesForLanguages(res,languages);
-                        
+
+            var withLinks = LinkExtractionHelper.GetLinksToFiles(whereToPutJsons, languagesFullNames, languages);
+
             FileChecker fch = new FileChecker(whereToPutJsons);
-            proc.ChangeFileProblematicChars(ref res);
             fch.SaveActualState(lwr, whereToPutChanges);
 
         }

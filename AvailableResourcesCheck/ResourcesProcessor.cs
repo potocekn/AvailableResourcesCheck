@@ -14,14 +14,16 @@ namespace AvailableResourcesCheck
         /// This method is responsible for changing name of all resources so that all of them would be in a form that is used in url on 4training.net
         /// </summary>
         /// <param name="resourceNames">list of resource names that we want to modify</param>
-        public void ChangeSpecialChars(ref List<string> resourceNames)
+        public List<string> ChangeSpecialChars(List<string> resourceNames)
         {
-            if (resourceNames == null) return;
+            List<string> results = new List<string>();
+            if (resourceNames == null) return null;
 
             for (int i = 0; i < resourceNames.Count; i++)
             {
-                resourceNames[i] = ChangeSpecialCharsInOneResource(resourceNames[i]);
+                results.Add(ChangeSpecialCharsInOneResource(resourceNames[i]));
             }
+            return results;
         }
 
         /// <summary>

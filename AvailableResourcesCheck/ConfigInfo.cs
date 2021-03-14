@@ -7,7 +7,7 @@ namespace AvailableResourcesCheck
     /// <summary>
     /// This class contains configuration information necessary for http web requests to 4training.net server
     /// </summary>
-    class ConfigInfo
+    public class ConfigInfo
     {
         public string Server { get; set; }
         public string ApiJsonPage { get; set; }
