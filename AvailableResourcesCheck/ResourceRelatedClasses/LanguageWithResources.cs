@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AvailableResourcesCheck
 {
-    class LanguageWithResources
+    public class LanguageWithResources
     {
         public string Name { get; set; }
         public List<string> Resources { get; set; }

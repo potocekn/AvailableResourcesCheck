@@ -13,38 +13,24 @@ namespace AvailableResourcesCheck
     /// </summary>
     class FileChecker
     {
-        string directory;
+        string jsonDirectory;
+        string changesDirectory;
 
-        public FileChecker(string directory)
+        public FileChecker(string jsons, string changes)
         {
-            this.directory = directory;
+            this.jsonDirectory = jsons;
+            changesDirectory = changes;
         }
-
-        /// <summary>
-        /// This method creates custom json string, that represents content of local json file describing actual state of the resource
-        /// and its translations.
-        /// </summary>
-        /// <param name="languageWithResource">Resource we would like to transform to json</param>
-        /// <returns>json file content for given resource in a form of string</returns>
-        string CreateText(LanguageWithResources languageWithResource)
-        {
-            StringBuilder sb = new StringBuilder();
-                       
-            foreach (var resource in languageWithResource.Resources)
-            {
-               sb.Append(resource + "\n");
-            }
-
-            return sb.ToString();
-        }
+        
 
         /// <summary>
         /// This method is used to save changed resources to separate file with given file name.
         /// </summary>
         /// <param name="changes">List of changed resource names</param>
         /// <param name="fileName">file where to save the changes</param>
-        void SaveChanges(List<string> changes, string fileName)
+        void SaveChanges(List<string> changes)
         {
+            string fileName = changesDirectory + "changes.json";
             if (!File.Exists(fileName))
             {
                 var myFile = File.Create(fileName);
@@ -60,25 +46,25 @@ namespace AvailableResourcesCheck
         /// For existing files content is changed only in case that something changed on 4training server (new translation, ...)
         /// </summary>
         /// <param name="languagesWithResources"></param>
-        public void SaveActualState(List<LanguageWithResources> languagesWithResources, string whereToSaveChanges)
+        public void SaveActualState(List<LanguageWithResourcesAndLinks> languagesWithResourcesAndLinks)
         {
             List<string> changes = new List<string>();
 
-            foreach (var languageWithResources in languagesWithResources)
+            foreach (var languageWithResourcesAndLinks in languagesWithResourcesAndLinks)
             {
-                string fileName = directory + languageWithResources.Name + ".json";
+                string fileName = jsonDirectory + languageWithResourcesAndLinks.Name + ".json";
                 if (File.Exists(fileName))
                 {
-                    LanguageWithResources lwr = JsonConvert.DeserializeObject<LanguageWithResources>(File.ReadAllText(fileName).Trim());
-                    foreach (var item in languageWithResources.Resources)
+                    LanguageWithResourcesAndLinks lwr = JsonConvert.DeserializeObject<LanguageWithResourcesAndLinks>(File.ReadAllText(fileName).Trim());
+                    foreach (var item in languageWithResourcesAndLinks.Resources)
                     {
                         if (!lwr.Resources.Contains(item))
                         {
-                            changes.Add(item);
+                            changes.Add(JsonConvert.SerializeObject(item));
                         }
                     }
-                    File.WriteAllText(fileName, JsonConvert.SerializeObject(languageWithResources));
-                    Debug.WriteLine("File {0}{1} exists", languageWithResources.Name, ".json");                    
+                    File.WriteAllText(fileName, JsonConvert.SerializeObject(languageWithResourcesAndLinks));
+                    Debug.WriteLine("File {0}{1} exists", languageWithResourcesAndLinks.Name, ".json");                    
                 }
                 else
                 {
@@ -87,13 +73,13 @@ namespace AvailableResourcesCheck
                     
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                     {
-                        changes.Add(languageWithResources.Name);
-                        file.Write(JsonConvert.SerializeObject(languageWithResources));
+                        changes.Add(languageWithResourcesAndLinks.Name);
+                        file.Write(JsonConvert.SerializeObject(languageWithResourcesAndLinks));
                     }
                 }
             }
 
-            SaveChanges(changes, whereToSaveChanges + "changes.json");
+            SaveChanges(changes);
         }
     }
 }

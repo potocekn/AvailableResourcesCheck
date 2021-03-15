@@ -11,13 +11,26 @@ namespace AvailableResourcesCheck
 {
     class Program
     {
-        
-        static void Main(string[] args)
-        {           
-            string configInfoString = args[0];
-            string whereToPutJsons = args[1]; 
-            string whereToPutChanges = args[2]; 
+        static void WriteList(string name, List<string> list)
+        {
+            Debug.WriteLine(name);
 
+            for (int i = 0; i < list.Count; i++)
+            {
+                Debug.WriteLine(list[i]);
+            }
+            Debug.WriteLine("=================================");
+        }
+
+        static void Main(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Wrong number of parametres - ({0}) ... one parameter expected", args.Length);
+                return;
+            }
+            string configInfoString = args[0];
+            
             ConfigInfoParser cip = new ConfigInfoParser(configInfoString);
             ConfigInfo ci = cip.GetConfigInfo();
             Debug.WriteLine("=================================");
@@ -26,22 +39,17 @@ namespace AvailableResourcesCheck
             
             ResourcesParser rp = new ResourcesParser(ESSENTIALS_URL);
             List<string> essentials = rp.Parse();
-
+            essentials.Remove("God's Story");
+            essentials.Add("God's Story (five fingers)");
+            essentials.Add("God's Story (first and last sacrifice)");
             string MORE_URL = ci.GetApiCallUrl("More");            
             ResourcesParser rp_more = new ResourcesParser(MORE_URL);
             List<string> more = rp_more.Parse();
             essentials.AddRange(more);
 
             Saver.SaveResources(ci.DetectedResourcesFileLocation, essentials);
-
-            ResourcesProcessor proc = new ResourcesProcessor();
-            Debug.WriteLine("Resources:");
-            
-            for (int i = 0; i < essentials.Count; i++)
-            {
-                Debug.WriteLine(essentials[i]);
-            }          
-            Debug.WriteLine("=================================");
+                        
+            WriteList("Resources", essentials);
 
             Debug.WriteLine("Languages:");
             LanguagesParser lp = new LanguagesParser(ci.GetApiCallUrl("Languages"));
@@ -59,10 +67,10 @@ namespace AvailableResourcesCheck
             List<ResourceWithLanguages> res = rd.DetectLanguages(ci.Server);
             List<LanguageWithResources> lwr = rd.DetectResourcesForLanguages(res,languages);
 
-            var withLinks = LinkExtractionHelper.GetLinksToFiles(whereToPutJsons, languagesFullNames, languages);
+            var withLinks = LinkExtractionHelper.GetLinksToFiles(lwr, languagesFullNames, languages);
 
-            FileChecker fch = new FileChecker(whereToPutJsons);
-            fch.SaveActualState(lwr, whereToPutChanges);
+            FileChecker fch = new FileChecker(ci.JsonFilesDestinationFolder, ci.DetectedChangesFileLocation);
+            fch.SaveActualState(withLinks);
 
         }
     }

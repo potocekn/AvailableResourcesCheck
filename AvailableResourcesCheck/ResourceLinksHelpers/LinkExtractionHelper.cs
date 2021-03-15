@@ -10,28 +10,31 @@ namespace AvailableResourcesCheck.ResourceLinksHelpers
 {
     public static class LinkExtractionHelper
     {
-        public static List<LanguageWithResourcesAndLinks> GetLinksToFiles(string jsondestination, List<string> languages, List<string> shortcuts)
+        public static List<LanguageWithResourcesAndLinks> GetLinksToFiles(List<LanguageWithResources> lwr, List<string> languages, List<string> shortcuts)
         {
             List<LanguageWithResourcesAndLinks> result = new List<LanguageWithResourcesAndLinks>();
             
             foreach (var language in languages)
             {
-                string fileName = jsondestination + language + ".json";
-                if (File.Exists(fileName))
+                
+                List<ResourceWithLinks> resourcesWithLinks = new List<ResourceWithLinks>();
+                int index = languages.IndexOf(language);
+                foreach (var item in lwr[index].Resources)
                 {
-                    LanguageWithResources lwr = JsonConvert.DeserializeObject<LanguageWithResources>(File.ReadAllText(fileName).Trim());
-                    List<ResourceWithLinks> resourcesWithLinks = new List<ResourceWithLinks>();
-
-                    foreach (var item in lwr.Resources)
-                    {
-                        ResourceWithLinks rwl = new ResourceWithLinks() { Name = item, PDFLink = "", ODTLink = "" };
-                        resourcesWithLinks.Add(rwl);
-                    }
-
-                    var languageWithRes = new LanguageWithResourcesAndLinks() { Name = lwr.Name, Resources = resourcesWithLinks };
-                    if (language != "English") GetPdfLinks(languageWithRes, shortcuts[languages.IndexOf(language)]);
-                    result.Add(languageWithRes);                   
+                    ResourceWithLinks rwl = new ResourceWithLinks() { Name = item, PDFLink = "", ODTLink = "" };
+                    resourcesWithLinks.Add(rwl);
                 }
+
+                var languageWithRes = new LanguageWithResourcesAndLinks() { Name = lwr[index].Name, Resources = resourcesWithLinks };
+                if (language != "English")
+                {
+                    GetPdfLinks(languageWithRes, shortcuts[languages.IndexOf(language)]);
+                }
+                else 
+                {
+                    GetPdfLinks(languageWithRes, "de");
+                }
+                result.Add(languageWithRes);                        
             }
 
             return result;
@@ -39,12 +42,13 @@ namespace AvailableResourcesCheck.ResourceLinksHelpers
 
 
         static Root GetRoot(string resource, string language)
-        {
-            
+        {            
             
                 string query = "https://www.4training.net/mediawiki/api.php?action=query&format=json&list=messagecollection&mcgroup=page-" + resource + "&mclanguage=" + language;
                 HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(query);
 
+            try
+            {
                 using (HttpWebResponse response = (HttpWebResponse)myRequest.GetResponse())
                 {
                     string responseText;
@@ -55,16 +59,29 @@ namespace AvailableResourcesCheck.ResourceLinksHelpers
                     Root root = JsonConvert.DeserializeObject<Root>(responseText);
                     return root;
                 }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
            
-            return new Root();
+           
         }
 
-        static string GetPdfName(Root root, string resourceName)
+        static string GetFileName(Root root, string format, string language)
         {
             foreach (var item in root.query.messagecollection)
             {
-                if (item.definition.Contains(".pdf"))
-                    return item.translation;
+                if (language == "English")
+                {
+                    if (item.definition.Contains(format))
+                        return item.definition;
+                }
+                else
+                {
+                    if (item.definition.Contains(format))
+                        return item.translation;
+                }                
             }
             return "";
         }
@@ -76,19 +93,18 @@ namespace AvailableResourcesCheck.ResourceLinksHelpers
             foreach (var item in languageWithResourcesAndLinks.Resources)
             {
                 Root root = GetRoot(item.Name, shortcut);
-                item.PDFLink = GetPdfName(root, item.Name);
+                if (root == null)
+                {
+                    item.PDFLink = "";
+                    item.ODTLink = "";
+                }
+                else
+                {
+                    item.PDFLink = GetFileName(root, ".pdf", languageWithResourcesAndLinks.Name);
+                    item.ODTLink = GetFileName(root, ".odt", languageWithResourcesAndLinks.Name);
+                }
+                
             }
         }
-
-        //public static List<string> GetAllAvailableLanguages(string languagesFileLocation)
-        //{
-        //    List<string> languages = new List<string>();
-        //    string fileName = languagesFileLocation + "languages.json";
-        //    if (File.Exists(fileName))
-        //    {
-        //        languages = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(fileName).Trim());
-        //    }
-        //    return languages;
-        //}
     }
 }

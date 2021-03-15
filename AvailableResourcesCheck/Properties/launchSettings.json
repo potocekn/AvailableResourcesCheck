@@ -2,7 +2,7 @@
   "profiles": {
     "AvailableResourcesCheck": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\Naty\\Desktop\\bakalarka\\folders\\config_info.txt C:\\Users\\Naty\\Desktop\\bakalarka\\folders\\txt_tests\\ C:\\Users\\Naty\\Desktop\\bakalarka\\folders\\changes\\"
+      "commandLineArgs": "C:\\Users\\Naty\\Desktop\\bakalarka\\folders\\config_info.txt "
     }
   }
 }
